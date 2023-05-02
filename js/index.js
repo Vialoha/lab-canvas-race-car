@@ -1,20 +1,107 @@
- /* window.onload = () => {
+ window.onload = () => {
   document.getElementById('start-button').onclick = () => {
-    
     startGame();
-
   };
 
   function startGame() {
-    
+    updateRoad();
+    updateCanvas();
   }
-}; */
+};
 
 
-  const canvas = document.getElementById("canvas");
-  const ctx = canvas.getContext("2d");
 
-  
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+///////////// ROAD
+/* 
+const img = new Image();
+      img.src = "/images/road.png";
+
+        const road = {
+          img: img,
+          y: 0,
+          speed: +3,
+
+          move: function(){
+            this.y += this.speed;
+            this.y %= canvas.width;
+          },
+
+          draw: function (){
+            ctx.drawImage(this.img, 0, this.y, 500, 2000);
+            ctx.drawImage(this.img, 0, this.y - this.img.height,500,2000);
+            ctx.drawImage(this.img, 0, this.y - this.img.height*2,500,2000);
+          },
+        };
+
+        function updateRoad(){
+            road.move();
+            ctx.clearRect(0,0,canvas.width, canvas.height);
+            road.draw();
+            requestAnimationFrame(updateRoad);
+        }
+    
+        img.onload = updateRoad; */
+
+//////////////////////// CAR and OBSTACLES
+
+//Create car piece and motion
+
+class Car{
+  constructor(){
+    this.x = 250;
+    const car = new Image();
+    car.addEventListener('load', () => {
+      this.img = car;
+      this.draw();
+    });
+    car.src = "/images/car.png"
+  }
+
+  moveLeft(){
+    this.x -=20;
+  }
+  moveRight(){
+    this.x +=20;
+  }
+
+  draw(){
+    ctx.drawImage(this.img, this.x, 500, 50,100);
+  }
+}
+
+const car = new Car();
+
+document.addEventListener('keydown', e => {
+  switch (e.keyCode){
+    case 37: car.moveLeft(); console.log('left', car);
+    break;
+    case 39: car.moveRight(); console.log('right', car);
+    break;
+  }
+  updateCanvas();
+}) 
+
+function updateCanvas(){
+  ctx.clearRect(0,0,500,700);
+  car.draw();
+}
+
+// ADD THIS NEXT CODE TO STOP THE CAR FROM MOVING. SETING THE KEYUP EVENT.
+
+
+/* document.addEventListener('keyup', (e) => {
+  road.speed = 0;
+}); */
+
+
+
+///////////// OBSTACLES
+
+
+
 
 
 
