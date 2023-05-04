@@ -1,54 +1,130 @@
- window.onload = () => {
-  document.getElementById('start-button').onclick = () => {
-    startGame();
+const canvas= document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+    window.onload = () => { 
+      //document.getElementById('start-button').onclick = () => {      //UNCOMMENT AFTERWARDS!!!!
+          startGame();
+        };
+
+        function startGame(){
+          drawRoad();
+          createCar();
+        
+          //scoreDisplay
+        }
+
+      //};                                                      //        UNCOMMENT AFTERWARDS!!!!
+
+
+            //WRITE THE LOGIC TO START THE GAME HERE.
+
+
+           
+
+    ///////////// ROAD
+   function drawRoad(){
+
+    const img = new Image();
+    img.src = "/images/road.png";
+   
+    const road = {
+
+        img: img,
+        y: 0,
+        speed: +3,
+
+        move: function(){
+          this.y += this.speed;
+          this.y %= canvas.width;
+        },
+
+        draw: function (){
+          ctx.drawImage(this.img, 0, this.y, 500, 2000);
+          ctx.drawImage(this.img, 0, this.y - this.img.height,500,2000);
+          ctx.drawImage(this.img, 0, this.y - this.img.height*2,500,2000);
+        },
+    }
+
+    function roadDisplay(){
+      road.move();
+      ctx.clearRect(0,0,canvas.width, canvas.height);
+      road.draw();
+      requestAnimationFrame(roadDisplay);
+    }
+    roadDisplay();
+  }
+  /////////////// CAR
+
+/////////////// Class for just the car, it doest not include the possible creation of obstacles!!!!
+
+function createCar() {
+
+  class Car{
+    constructor(){
+      this.x = 250;
+      const car = new Image();
+      car.addEventListener('load', () => {
+        this.img = car;
+        this.draw();
+      });
+      car.src = "/images/car.png"
+    }
+  
+    moveLeft(){
+      this.x -=20;
+    }
+    moveRight(){
+      this.x +=20;
+    }
+  
+    draw(){
+      ctx.drawImage(this.img, this.x, 550, 50,100);
+    }
+  }
+
+  const car = new Car();
+
+  document.addEventListener('keydown', e => {
+    switch (e.keyCode){
+      case 37: 
+      if(car.x >10)
+      car.moveLeft(); console.log('left', car);
+      break;
+
+      case 39: 
+      if(car.x < 450)
+      car.moveRight(); console.log('right', car);
+      break;
+    }
+    updateCar();
+  });
+
+  
+  function updateCar(){
+    ctx.clearRect(0,0,500,700);
+    car.draw();
+    //console.log("car x" + car.x) used to get to the limit of the canvas for the car. "if" statements inside the keyCode
   };
 
-  function startGame() {
-    updateRoad();
-    updateCanvas();
-  }
 };
 
 
 
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
 
-///////////// ROAD
-/* 
-const img = new Image();
-      img.src = "/images/road.png";
 
-        const road = {
-          img: img,
-          y: 0,
-          speed: +3,
 
-          move: function(){
-            this.y += this.speed;
-            this.y %= canvas.width;
-          },
 
-          draw: function (){
-            ctx.drawImage(this.img, 0, this.y, 500, 2000);
-            ctx.drawImage(this.img, 0, this.y - this.img.height,500,2000);
-            ctx.drawImage(this.img, 0, this.y - this.img.height*2,500,2000);
-          },
-        };
 
-        function updateRoad(){
-            road.move();
-            ctx.clearRect(0,0,canvas.width, canvas.height);
-            road.draw();
-            requestAnimationFrame(updateRoad);
-        }
-    
-        img.onload = updateRoad; */
+
+
+
+
+
 
 //////////////////////// CAR and OBSTACLES
 
 //Create car piece and motion
-
+/* 
 class Car{
   constructor(){
     this.x = 250;
@@ -89,6 +165,8 @@ function updateCanvas(){
   car.draw();
 }
 
+updateCanvas();
+ */
 // ADD THIS NEXT CODE TO STOP THE CAR FROM MOVING. SETING THE KEYUP EVENT.
 
 
@@ -372,16 +450,4 @@ img.onload = updateCanvas;
 };
 
 
-
-
-
-//ATTENTION
-// 
-
-/* QUESTIONS AND UNDONE ITERATIONS
-    1. getting the start game button to make the road appear!
-       Now it is fixed: - tried DOM manipulation, css display:none 
-       (could't access the element I wanted! - maybe beacause it is in css file....?)
-       // https://ironhack.zoom.us/rec/play/iNPrzM7g4yIcC70VGX3fq-Ft6Vt4Zr3aRFG3NaUXNp_Marnw-dPGqPAMuAnIYNXYEY94Ri0GqSw7OydA.Qm3QTpPNSXyU8HQR?canPlayFromShare=true&from=share_recording_detail&startTime=1682617045000&componentName=rec-play&originRequestUrl=https%3A%2F%2Fironhack.zoom.us%2Frec%2Fshare%2FbT-jNzGE_NfH9HGXuRBWNtU40aMWFCKL--g7GPAEqYlOQ3YhBgEi_jbauXokWWfn.TvkBxQI34f9ka7iA%3FstartTime%3D1682617045000
-
-       2. Why it is not accepting the KeyCode for the keydown/up  ??? */
+*/
