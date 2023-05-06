@@ -1,31 +1,37 @@
+
+
+
+const myObstacles = [];
+
 const canvas= document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
+const img = new Image();
+img.src = "/images/road.png";
+
+
+
     window.onload = () => { 
-      //document.getElementById('start-button').onclick = () => {      //UNCOMMENT AFTERWARDS!!!!
+      document.getElementById('start-button').onclick = () => {      //UNCOMMENT AFTERWARDS!!!!
           startGame();
         };
 
         function startGame(){
-          drawRoad();
-          createCar();
+          roadDisplay();
+          updateCar()
+          //updateObstacles();
         
           //scoreDisplay
         }
-
+      }
       //};                                                      //        UNCOMMENT AFTERWARDS!!!!
 
 
             //WRITE THE LOGIC TO START THE GAME HERE.
 
 
-           
 
     ///////////// ROAD
-   function drawRoad(){
-
-    const img = new Image();
-    img.src = "/images/road.png";
    
     const road = {
 
@@ -43,21 +49,22 @@ const ctx = canvas.getContext("2d");
           ctx.drawImage(this.img, 0, this.y - this.img.height,500,2000);
           ctx.drawImage(this.img, 0, this.y - this.img.height*2,500,2000);
         },
-    }
+    };
 
+   
     function roadDisplay(){
+      
       road.move();
+      updateCar();
       ctx.clearRect(0,0,canvas.width, canvas.height);
       road.draw();
+
       requestAnimationFrame(roadDisplay);
-    }
-    roadDisplay();
-  }
+    };
+
   /////////////// CAR
 
 /////////////// Class for just the car, it doest not include the possible creation of obstacles!!!!
-
-function createCar() {
 
   class Car{
     constructor(){
@@ -101,12 +108,94 @@ function createCar() {
 
   
   function updateCar(){
-    ctx.clearRect(0,0,500,700);
+    ctx.clearRect(0,0,canvas.width,canvas.height);
     car.draw();
     //console.log("car x" + car.x) used to get to the limit of the canvas for the car. "if" statements inside the keyCode
   };
 
-};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+///// Generate the obstacles
+
+function generateObstacles(){
+
+  class Obstacles {
+    constructor(width, height, color, x, y) {
+      this.width = width;
+      this.height = height;
+      this.color = color;
+      this.x = x;
+      this.y = y;
+    }
+    update() {
+      const ctx = myGameArea.context;
+      ctx.fillStyle = this.color;
+      ctx.fillRect(this.x, this.y, this.width, this.height);
+    }
+    newPos() {
+      this.x += this.speedX;
+      this.y += this.speedY;
+    }
+  }
+  
+}
+const obstacle = new Obstacles (30, 30, 'red', 0, 110);
+
+function updateObstacles(){
+    for(i=0; i<myObstacles.length; i++){
+      myObstacles[i].x += -1;
+      myObstacles[i].update();
+    }
+
+    myGameArea.frames += 1;
+    if (myGameArea.frames % 120 === 0) {
+      let x = canvas.width;
+      let minHeight = 20;
+      let maxHeight = 200;
+      let height = Math.floor(
+        Math.random() * (maxHeight - minHeight + 1) + minHeight
+      );
+      let minGap = 50;
+      let maxGap = 200;
+      let gap = Math.floor(Math.random() * (maxGap - minGap + 1) + minGap);
+      myObstacles.push(new Obstacles(10, height, "green", x, 0));
+      myObstacles.push(
+        new Obstacles(10, x - height - gap, "green", x, height + gap)
+      );
+    }
+  };
+
+ 
+
+  
+
+
+/////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
 
 
 
